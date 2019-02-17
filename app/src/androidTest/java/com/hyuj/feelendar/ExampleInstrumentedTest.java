@@ -1,4 +1,4 @@
-package com.hyuj.feelender;
+package com.hyuj.feelendar;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

@@ -1,4 +1,4 @@
-package com.hyuj.feelender;
+package com.hyuj.feelendar;
 
 import org.junit.Test;
 
