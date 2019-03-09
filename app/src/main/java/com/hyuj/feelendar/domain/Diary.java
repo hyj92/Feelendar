@@ -5,8 +5,16 @@ import java.util.Date;
 public class Diary {
 
     private Date date;
-    private String memo;
-    private Feel feel;
+    private String feelName;
+    private String description;
+
+    public Diary(Date date, String feelName, String description) {
+        this.date = date;
+        this.feelName = feelName;
+        this.description = description;
+    }
+
+    public Diary(){}
 
     public Date getDate() {
         return date;
@@ -16,19 +24,19 @@ public class Diary {
         this.date = date;
     }
 
-    public String getMemo() {
-        return memo;
+    public String getDescription() {
+        return description;
     }
 
-    public void setMemo(String memo) {
-        this.memo = memo;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public Feel getFeel() {
-        return feel;
+    public String getFeelName() {
+        return feelName;
     }
 
-    public void setFeel(Feel feel) {
-        this.feel = feel;
+    public void setFeelName(String feelName) {
+        this.feelName = feelName;
     }
 }

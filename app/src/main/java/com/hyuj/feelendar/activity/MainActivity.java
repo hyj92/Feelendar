@@ -1,6 +1,7 @@
 package com.hyuj.feelendar.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -8,16 +9,29 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CalendarView;
 
 import com.hyuj.feelendar.R;
+import com.hyuj.feelendar.helper.DatabaseAccessHelper;
+import com.hyuj.feelendar.helper.SQLiteAccessHelper;
+
+import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
+
+    DatabaseAccessHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_main);
+
+        // DB Helper 초기화
+        db = new SQLiteAccessHelper(this.getApplicationContext());
+
+        // Toolbar 초기화
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -26,6 +40,17 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+            }
+        });
+
+        // Calendar 현재 시간으로 초기화
+        CalendarView calendarView = findViewById(R.id.calendar_main);
+        calendarView.setDate(System.currentTimeMillis());
+        // 날짜 선택 시 이벤트
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener(){
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+
             }
         });
     }

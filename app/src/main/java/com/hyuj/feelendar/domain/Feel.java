@@ -6,6 +6,19 @@ public class Feel {
     private String resourceId;
     private int score;
 
+    public Feel(String name, String resourceId, int score) {
+        this.name = name;
+        this.resourceId = resourceId;
+        this.score = score;
+    }
+
+    public Feel(String name) {
+        this.name = name;
+    }
+
+    public Feel() {
+    }
+
     public String getName() {
         return name;
     }
