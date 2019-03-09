@@ -14,8 +14,9 @@ import com.hyuj.feelendar.domain.Feel;
 import com.hyuj.feelendar.util.DateConvertUtil;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Calendar;
+
 
 /**
  * SQLite 접근을 위한 SQLiteOpenHelper 클래스를 상속받은 Helper 클래스입니다.
@@ -44,7 +45,7 @@ public class SQLiteAccessHelper extends SQLiteOpenHelper implements DatabaseAcce
             "DESCRIPTION TEXT)";
     private static final String SQL_CREATE_FEEL_TABLE = "CREATE TABLE " + ColumnConstant.TB_FEEL +
             "(FEEL_CODE TEXT PRIMARY KEY," +
-            "RESOURCE_ID TEXT," +
+            "RESOURCE_ID INTEGER," +
             "SCORE INTEGER);";
     private static final String SQL_DELETE_DIARY_TABLE = "DROP TABLE IF EXISTS " + ColumnConstant.TB_FEEL;
     private static final String SQL_DELETE_FEEL_TABLE = "DROP TABLE IF EXISTS " + ColumnConstant.TB_DIARY;
@@ -95,12 +96,12 @@ public class SQLiteAccessHelper extends SQLiteOpenHelper implements DatabaseAcce
     /**
      * SQLite에서 startDate ~ endDate 기간에 해당하는 Diary를 가져옵니다.
      *
-     * @param startDate
-     * @param endDate
+     * @param start
+     * @param end
      * @return {List<Diary>}
      * */
     @Override
-    public List<Diary> selectDiaryList(Date startDate, Date endDate) {
+    public List<Diary> selectDiaryList(Calendar start, Calendar end) {
         SQLiteDatabase db = this.getReadableDatabase();
         List<Diary> diaryList = new ArrayList<>();
 
@@ -108,7 +109,7 @@ public class SQLiteAccessHelper extends SQLiteOpenHelper implements DatabaseAcce
                 ColumnConstant.TB_DIARY,          // The table to query
                 COLUMNS_DIARY_SELECT,             // The array of columns to return (pass null to get all)
                 WHERE_DIARY_SELECT,               // The columns for the WHERE clause
-                new String[]{startDate.toString(), endDate.toString()},             // The values for the WHERE clause
+                new String[]{start.toString(), end.toString()},             // The values for the WHERE clause
                 null,                   // don't group the rows
                 null,                    // don't filter by row groups
                 null                    // The sort order
@@ -139,7 +140,7 @@ public class SQLiteAccessHelper extends SQLiteOpenHelper implements DatabaseAcce
 
         while(cursor.moveToNext()) {
             String feelName = cursor.getString(cursor.getColumnIndexOrThrow(ColumnConstant.COLUMN_FEEL));
-            String resourceId = cursor.getString(cursor.getColumnIndexOrThrow(ColumnConstant.COLUMN_RESOURCE_ID));
+            int resourceId = cursor.getInt(cursor.getColumnIndexOrThrow(ColumnConstant.COLUMN_RESOURCE_ID));
             int score = cursor.getInt(cursor.getColumnIndexOrThrow(ColumnConstant.COLUMN_SCORE));
 
             feelList.add(new Feel(feelName, resourceId, score));

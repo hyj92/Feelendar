@@ -1,14 +1,14 @@
 package com.hyuj.feelendar.domain;
 
-import java.util.Date;
+import java.util.Calendar;
 
 public class Diary {
 
-    private Date date;
+    private Calendar date;
     private String feelName;
     private String description;
 
-    public Diary(Date date, String feelName, String description) {
+    public Diary(Calendar date, String feelName, String description) {
         this.date = date;
         this.feelName = feelName;
         this.description = description;
@@ -16,11 +16,11 @@ public class Diary {
 
     public Diary(){}
 
-    public Date getDate() {
+    public Calendar getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Calendar date) {
         this.date = date;
     }
 

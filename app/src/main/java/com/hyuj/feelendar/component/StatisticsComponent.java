@@ -25,7 +25,7 @@ public class StatisticsComponent {
      * 컴포넌트 인스턴스를 가져오는 메소드입니다.(싱글톤 패턴)
      * @return StatisticsComponent
      * */
-    public StatisticsComponent getInstance(){
+    public static StatisticsComponent getInstance(){
         return StatisticsHodler.statisticsComponent;
     }
 

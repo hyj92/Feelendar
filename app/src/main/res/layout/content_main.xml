@@ -42,11 +42,10 @@
             android:layout_height="wrap_content"
             android:gravity="left"
             android:padding="10dp"
-            android:layout_weight=""
             android:text="Title Preview"/>
 
         <LinearLayout
-            android:id="@+id/layout_preview_feel"
+            android:id="@+id/layout_feel_preview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
