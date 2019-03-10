@@ -1,34 +1,42 @@
 package com.hyuj.feelendar.domain;
 
-import java.util.Date;
+import java.util.Calendar;
 
 public class Diary {
 
-    private Date date;
-    private String memo;
-    private Feel feel;
+    private Calendar date;
+    private String feelName;
+    private String description;
 
-    public Date getDate() {
+    public Diary(Calendar date, String feelName, String description) {
+        this.date = date;
+        this.feelName = feelName;
+        this.description = description;
+    }
+
+    public Diary(){}
+
+    public Calendar getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Calendar date) {
         this.date = date;
     }
 
-    public String getMemo() {
-        return memo;
+    public String getDescription() {
+        return description;
     }
 
-    public void setMemo(String memo) {
-        this.memo = memo;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public Feel getFeel() {
-        return feel;
+    public String getFeelName() {
+        return feelName;
     }
 
-    public void setFeel(Feel feel) {
-        this.feel = feel;
+    public void setFeelName(String feelName) {
+        this.feelName = feelName;
     }
 }

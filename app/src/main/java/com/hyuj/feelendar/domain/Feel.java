@@ -3,8 +3,21 @@ package com.hyuj.feelendar.domain;
 public class Feel {
 
     private String name;
-    private String resourceId;
+    private int resourceId;
     private int score;
+
+    public Feel(String name, int resourceId, int score) {
+        this.name = name;
+        this.resourceId = resourceId;
+        this.score = score;
+    }
+
+    public Feel(String name) {
+        this.name = name;
+    }
+
+    public Feel() {
+    }
 
     public String getName() {
         return name;
@@ -14,11 +27,11 @@ public class Feel {
         this.name = name;
     }
 
-    public String getResourceId() {
+    public int getResourceId() {
         return resourceId;
     }
 
-    public void setResourceId(String resourceId) {
+    public void setResourceId(int resourceId) {
         this.resourceId = resourceId;
     }
 

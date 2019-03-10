@@ -1,9 +1,10 @@
 package com.hyuj.feelendar.helper;
 
 import com.hyuj.feelendar.domain.Diary;
+import com.hyuj.feelendar.domain.Feel;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Calendar;
 
 /**
  * Database 접근을 위한 Helper Interface입니다.
@@ -13,6 +14,11 @@ import java.util.List;
  * */
 public interface DatabaseAccessHelper {
 
-    List<Diary> getDiaryList(Date startDate, Date endDate);
+    List<Diary> selectDiaryList(Calendar start, Calendar end);
 
+    List<Feel> selectFeelList();
+
+    void insertDiary(Diary diary);
+
+    void insertFeel(Feel feel);
 }
