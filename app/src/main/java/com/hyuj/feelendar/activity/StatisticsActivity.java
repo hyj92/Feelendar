@@ -58,9 +58,7 @@ public class StatisticsActivity extends AppCompatActivity {
         anyChartView.setProgressBar(findViewById(R.id.progress_bar));
 
         Cartesian cartesian = AnyChart.line();
-
         cartesian.animation(true);
-
         cartesian.padding(10d, 20d, 5d, 20d);
 
         cartesian.crosshair().enabled(true);
