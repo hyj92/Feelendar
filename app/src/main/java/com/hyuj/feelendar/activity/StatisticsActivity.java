@@ -2,6 +2,8 @@ package com.hyuj.feelendar.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
@@ -16,19 +18,41 @@ import com.anychart.enums.MarkerType;
 import com.anychart.enums.TooltipPositionMode;
 import com.anychart.graphics.vector.Stroke;
 import com.hyuj.feelendar.R;
+import com.hyuj.feelendar.helper.SQLiteAccessHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Class for statistics activity
+ *
+ * @author HE
  */
 public class StatisticsActivity extends AppCompatActivity {
+    private static SQLiteAccessHelper sqLiteAccessHelper;
+    Button btnYear, btnMonth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
+
+        btnYear = findViewById(R.id.btn_year);
+        btnMonth = findViewById(R.id.btn_month);
+
+        btnYear.setOnClickListener(new View.OnClickListener(){
+           @Override
+           public void onClick(View view) {
+                //TODO load data from SQLite and reload the chart by year
+           }
+        });
+
+        btnMonth.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                //TODO load data from SQLite and reload the chart by month
+            }
+        });
 
         AnyChartView anyChartView = findViewById(R.id.line_chart);
         anyChartView.setProgressBar(findViewById(R.id.progress_bar));
