@@ -4,24 +4,24 @@ import java.util.Calendar;
 
 public class Diary {
 
-    private Calendar date;
+    private Calendar calendar;
     private String feelName;
     private String description;
 
-    public Diary(Calendar date, String feelName, String description) {
-        this.date = date;
+    public Diary(Calendar calendar, String feelName, String description) {
+        this.calendar = calendar;
         this.feelName = feelName;
         this.description = description;
     }
 
     public Diary(){}
 
-    public Calendar getDate() {
-        return date;
+    public Calendar getCalendar() {
+        return calendar;
     }
 
-    public void setDate(Calendar date) {
-        this.date = date;
+    public void setCalendar(Calendar calendar) {
+        this.calendar = calendar;
     }
 
     public String getDescription() {
