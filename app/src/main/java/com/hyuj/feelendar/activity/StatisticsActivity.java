@@ -3,7 +3,11 @@ package com.hyuj.feelendar.activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
 
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
@@ -18,9 +22,11 @@ import com.anychart.enums.MarkerType;
 import com.anychart.enums.TooltipPositionMode;
 import com.anychart.graphics.vector.Stroke;
 import com.hyuj.feelendar.R;
+import com.hyuj.feelendar.domain.Diary;
 import com.hyuj.feelendar.helper.SQLiteAccessHelper;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -30,27 +36,64 @@ import java.util.List;
  */
 public class StatisticsActivity extends AppCompatActivity {
     private static SQLiteAccessHelper sqLiteAccessHelper;
-    Button btnYear, btnMonth;
+    RadioGroup rdGroup;
+    RadioButton btnYear, btnMonth;
+    Spinner spnYear, spnMonth;
+    private Calendar calStart = Calendar.getInstance();
+    private Calendar calEND = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
 
+        calStart.set(1900, 1, 1);
+
+        sqLiteAccessHelper = new SQLiteAccessHelper(this);
+
+        rdGroup = findViewById(R.id.radio_group);
         btnYear = findViewById(R.id.btn_year);
         btnMonth = findViewById(R.id.btn_month);
 
-        btnYear.setOnClickListener(new View.OnClickListener(){
-           @Override
-           public void onClick(View view) {
-                //TODO load data from SQLite and reload the chart by year
-           }
+        spnYear = findViewById(R.id.spn_Year);
+        spnMonth = findViewById(R.id.spn_Month);
+
+        List<DataEntry> seriesData; //TODO
+        seriesData = addData();
+
+        rdGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch(checkedId) {
+                    case R.id.btn_year:
+                        //TODO load data from DB and reload the chart by year
+                    case R.id.btn_month:
+                        //TODO load data from DB and reload the chart by month
+                }
+            }
         });
 
-        btnMonth.setOnClickListener(new View.OnClickListener(){
+        spnYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                //TODO load data from SQLite and reload the chart by month
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //TODO load data from DB and reload the chart to newly selected year
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        spnMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //TODO load data from DB and reload the chart to newly selected month
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
@@ -74,8 +117,43 @@ public class StatisticsActivity extends AppCompatActivity {
         cartesian.yAxis(0).title("Mood Score");
         cartesian.xAxis(0).labels().padding(5d, 5d, 5d, 5d);
 
+        Set set = Set.instantiate();
+        set.data(seriesData);
+        Mapping series1Mapping = set.mapAs("{ x: 'x', value: 'value' }");
+
+        Line series1 = cartesian.line(series1Mapping);
+        series1.name("Mood");
+        series1.hovered().markers().enabled(true);
+        series1.hovered().markers()
+                .type(MarkerType.CIRCLE)
+                .size(4d);
+        series1.tooltip()
+                .position("right")
+                .anchor(Anchor.LEFT_CENTER)
+                .offsetX(5d)
+                .offsetY(5d);
+
+        cartesian.legend().enabled(true);
+        cartesian.legend().fontSize(13d);
+        cartesian.legend().padding(0d, 0d, 10d, 0d);
+
+        anyChartView.setChart(cartesian);
+    }
+
+    private class CustomDataEntry extends ValueDataEntry {
+        CustomDataEntry(String x, Number value) {
+            super(x, value);
+        }
+    }
+
+    /**
+     *     Method for adding chart data
+     *     Database로부터 받아온 정보를 parsing해서 chart data 값으로 설정 가능하도록 해줌
+     *     가져온 정보를 매개변수로 받아야 함
+     */
+    private List<DataEntry> addData (){
         List<DataEntry> seriesData = new ArrayList<>();
-        // TODO collect data from DB
+
         seriesData.add(new CustomDataEntry("1986", 3.6));
         seriesData.add(new CustomDataEntry("1987", 7.1));
         seriesData.add(new CustomDataEntry("1988", 8.5));
@@ -101,57 +179,6 @@ public class StatisticsActivity extends AppCompatActivity {
         seriesData.add(new CustomDataEntry("2008", 15.7));
         seriesData.add(new CustomDataEntry("2009", 12.0));
 
-        Set set = Set.instantiate();
-        set.data(seriesData);
-        Mapping series1Mapping = set.mapAs("{ x: 'x', value: 'value' }");
-
-        Line series1 = cartesian.line(series1Mapping);
-        series1.name("Mood");
-        series1.hovered().markers().enabled(true);
-        series1.hovered().markers()
-                .type(MarkerType.CIRCLE)
-                .size(4d);
-        series1.tooltip()
-                .position("right")
-                .anchor(Anchor.LEFT_CENTER)
-                .offsetX(5d)
-                .offsetY(5d);
-
-//        Line series2 = cartesian.line(series2Mapping);
-//        series2.name("Whiskey");
-//        series2.hovered().markers().enabled(true);
-//        series2.hovered().markers()
-//                .type(MarkerType.CIRCLE)
-//                .size(4d);
-//        series2.tooltip()
-//                .position("right")
-//                .anchor(Anchor.LEFT_CENTER)
-//                .offsetX(5d)
-//                .offsetY(5d);
-//
-//        Line series3 = cartesian.line(series3Mapping);
-//        series3.name("Tequila");
-//        series3.hovered().markers().enabled(true);
-//        series3.hovered().markers()
-//                .type(MarkerType.CIRCLE)
-//                .size(4d);
-//        series3.tooltip()
-//                .position("right")
-//                .anchor(Anchor.LEFT_CENTER)
-//                .offsetX(5d)
-//                .offsetY(5d);
-
-        cartesian.legend().enabled(true);
-        cartesian.legend().fontSize(13d);
-        cartesian.legend().padding(0d, 0d, 10d, 0d);
-
-        anyChartView.setChart(cartesian);
-    }
-
-    private class CustomDataEntry extends ValueDataEntry {
-
-        CustomDataEntry(String x, Number value) {
-            super(x, value);
-        }
+        return seriesData;
     }
 }
