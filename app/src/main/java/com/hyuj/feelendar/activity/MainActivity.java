@@ -2,6 +2,7 @@ package com.hyuj.feelendar.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -18,13 +19,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hyuj.feelendar.R;
+import com.hyuj.feelendar.calendar.decorator.FeelDayDecorator;
+import com.hyuj.feelendar.calendar.decorator.SaturdayDecorator;
+import com.hyuj.feelendar.calendar.decorator.SundayDecorator;
 import com.hyuj.feelendar.component.FeelMappingComponent;
 import com.hyuj.feelendar.domain.Diary;
 import com.hyuj.feelendar.domain.Feel;
 import com.hyuj.feelendar.helper.DatabaseAccessHelper;
 import com.hyuj.feelendar.helper.SQLiteAccessHelper;
 import com.hyuj.feelendar.util.DateConvertUtil;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -32,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     DatabaseAccessHelper db;
     FeelMappingComponent feelMappingComponent = FeelMappingComponent.getInstance();
+    List<FeelDayDecorator> feelDayDecoratorList = new ArrayList<>();
     List<Diary> currentYearDiaryList;
     List<Feel> feelList;
 
@@ -55,6 +64,19 @@ public class MainActivity extends AppCompatActivity {
 
         // feel list 초기화
         feelList = db.selectFeelList();
+
+        setCalendarDecorator();
+    }
+
+    private void setCalendarDecorator() {
+        for(Feel feel : feelList){
+            List<CalendarDay> calendarDayList = new ArrayList<>();
+            for(Diary diary : currentYearDiaryList){
+                calendarDayList.add(CalendarDay.from(diary.getCalendar()));
+            }
+            FeelDayDecorator decorator = new FeelDayDecorator(feel, calendarDayList, this);
+            feelDayDecoratorList.add(decorator);
+        }
     }
 
     @Override
@@ -65,13 +87,13 @@ public class MainActivity extends AppCompatActivity {
         init(this.getApplicationContext());
 
         // Toolbar 초기화
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
 
         // Test 버튼
         // TODO: 슬라이드 하거나 새로운 액션으로 액티비티 변경이 필요합니다.
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,30 +110,32 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Calendar 현재 시간으로 초기화
-        Calendar calendar = Calendar.getInstance();
+        Calendar currentCalendar = Calendar.getInstance();
+        // MaterialCalendarView 생성
+        MaterialCalendarView calendarView = findViewById(R.id.calendar_main);
+        calendarView.setTileHeight(20); // tile 크기 조정에 따라 calendar height 가 결정됩니다.
+        // 그 전에는 default로 calendar가 잡을 수 있는 가장 큰 크기를 잡습니다.
+        //calendarView.setCurrentDate(currentCalendar);
 
-        CalendarView calendarView = findViewById(R.id.calendar_main);
-        calendarView.setDate(calendar.getTimeInMillis());
+        // 달력에 feel 표시해 줄 day decorator 추가
+        calendarView.addDecorators(
+                new SundayDecorator(),
+                new SaturdayDecorator());
+        calendarView.addDecorators(feelDayDecoratorList);
 
-        // 현재 날짜 Diray Preview 생성
-        showPreviewDiary(calendar);
+        // 현재 날짜 Diary Preview 생성
+        showPreviewDiary(currentCalendar);
 
         // 날짜 선택 시 이벤트
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener(){
+        calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 // TODO: calendarView에서 이미 선택된 date와 이 listener 이벤트에서 가져온 date를 비교해서
                 // TODO: 같은 경우 두번 클릭으로 보고 diary 생성하는 페이지로 넘어가도 됩니다.
-                long beforeDate = view.getDate();
-
+                // long beforeDate = view.getDate();
 
                 // 날짜 선택할 때 마다 해당 날짜의 diary를 가져옵니다.
-                Calendar selectedCalendar = Calendar.getInstance();
-                selectedCalendar.set(Calendar.YEAR, year);
-                selectedCalendar.set(Calendar.MONTH, month);
-                selectedCalendar.set(Calendar.DATE, dayOfMonth);
-
-                showPreviewDiary(selectedCalendar);
+                showPreviewDiary(date.getCalendar());
             }
         });
     }
@@ -124,9 +148,9 @@ public class MainActivity extends AppCompatActivity {
      * */
     Diary getDiary(Calendar calendar){
         for(Diary diary : currentYearDiaryList){
-            if(calendar.get(Calendar.YEAR)== diary.getDate().get(Calendar.YEAR) &&
-                    calendar.get(Calendar.MONTH) == diary.getDate().get(Calendar.MONTH) &&
-                    calendar.get(Calendar.DATE) == diary.getDate().get(Calendar.DATE)){
+            if(calendar.get(Calendar.YEAR)== diary.getCalendar().get(Calendar.YEAR) &&
+                    calendar.get(Calendar.MONTH) == diary.getCalendar().get(Calendar.MONTH) &&
+                    calendar.get(Calendar.DATE) == diary.getCalendar().get(Calendar.DATE)){
                 return diary;
             }
         }
