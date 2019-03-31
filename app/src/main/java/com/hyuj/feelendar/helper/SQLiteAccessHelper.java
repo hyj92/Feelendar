@@ -157,12 +157,12 @@ public class SQLiteAccessHelper extends SQLiteOpenHelper implements DatabaseAcce
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(ColumnConstant.COLUMN_DIARY_DATE, diary.getDate().toString().replaceAll("\\D", ""));
+        values.put(ColumnConstant.COLUMN_DIARY_DATE, diary.getCalendar().toString().replaceAll("\\D", ""));
         values.put(ColumnConstant.COLUMN_FEEL,diary.getFeelName());
         values.put(ColumnConstant.COLUMN_DESCRIPTION, diary.getDescription());
 
         long newRowId = db.insert(ColumnConstant.TB_DIARY, null, values);
-        if(newRowId < 0) new Exception("FAIL TO INSERT DIARY " + diary.getDate() + "," + diary.getFeelName());
+        if(newRowId < 0) new Exception("FAIL TO INSERT DIARY " + diary.getCalendar() + "," + diary.getFeelName());
     }
 
     @Override

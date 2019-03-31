@@ -172,15 +172,17 @@ public class MainActivity extends AppCompatActivity {
         // 1) title 설정
         previewTitleText.setText(DateConvertUtil.dateToStringForView(calendar));
         // 2) diary preview 설정
-        previewDiaryText.setText(currentDateDiary.getDescription());
-        // 3) feel preview 설정
-        ImageView feelImage = new ImageView(this);
-        feelImage.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        int feelResourceId = feelMappingComponent.getResourceId(feelList, currentDateDiary.getFeelName());
-        feelImage.setImageResource(feelResourceId);
+        if(currentDateDiary != null){
+            previewDiaryText.setText(currentDateDiary.getDescription());
+            // 3) feel preview 설정
+            ImageView feelImage = new ImageView(this);
+            feelImage.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            int feelResourceId = feelMappingComponent.getResourceId(feelList, currentDateDiary.getFeelName());
+            feelImage.setImageResource(feelResourceId);
 
-        feelImage.setImageResource(R.drawable.btn_round_rectangle); // TODO : feel image로 바꾸어야 함
-        previewFeelLayout.addView(feelImage);
+            feelImage.setImageResource(R.drawable.btn_round_rectangle); // TODO : feel image로 바꾸어야 함
+            previewFeelLayout.addView(feelImage);
+        }
     }
 
     @Override
