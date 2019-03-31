@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         Calendar currentCalendar = Calendar.getInstance();
         // MaterialCalendarView 생성
         MaterialCalendarView calendarView = findViewById(R.id.calendar_main);
-        calendarView.setTileHeight(20); // tile 크기 조정에 따라 calendar height 가 결정됩니다.
+        calendarView.setTileHeight(100); // tile 크기 조정에 따라 calendar height 가 결정됩니다.
         // 그 전에는 default로 calendar가 잡을 수 있는 가장 큰 크기를 잡습니다.
         //calendarView.setCurrentDate(currentCalendar);
 
